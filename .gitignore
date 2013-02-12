@@ -1,0 +1,8 @@
+_TeamCity.Gematria
+bin
+obj
+/packages/NUnit.2.6.2/NUnit.2.6.2.nupkg
+/packages/NUnit.2.6.2/NUnit.2.6.2.nuspec
+/packages/NUnit.2.6.2/lib/nunit.framework.dll
+/packages/NUnit.2.6.2/lib/nunit.framework.xml
+/packages/NUnit.2.6.2/license.txt
