@@ -9,6 +9,7 @@ namespace EllisWeb.Gematria
     public static class LookupFactory
     {
         private static readonly Dictionary<GematriaType, Dictionary<char,int>> lookupDict = new Dictionary<GematriaType, Dictionary<char, int>>();
+        private static readonly object dictLock = new object();
 
         /// <summary>
         /// Retrieve a letter lookup dictionary for a given calculation method
@@ -20,7 +21,13 @@ namespace EllisWeb.Gematria
             // only need to generate each type of dictionary once
             if (!lookupDict.ContainsKey(type))
             {
-                lookupDict[type] = GenerateDictionary(type);
+                lock (dictLock)
+                {
+                    if (!lookupDict.ContainsKey(type))
+                    {
+                        lookupDict[type] = GenerateDictionary(type);
+                    }
+                }
             }
             return lookupDict[type];
         }
