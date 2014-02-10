@@ -1,7 +1,7 @@
 ﻿Gematria
 ========
 
-A .net Class Library for calculating the Gematria value of strings of Hebrew text, or convert numbers into Hebrew Text.
+A .net class library for calculating the Gematria / Gematriya value of strings of Hebrew text, or convert numbers into Hebrew Text.
 
 > Gematria or gimatria (Hebrew: גימטריא/גימטריה‎ gēmaṭriyā) is a traditional Jewish system of assigning numerical value to a word or phrase ([Wikipedia](http://en.wikipedia.org/wiki/Gematria))
 
