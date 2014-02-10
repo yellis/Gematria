@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EllisWeb.Gematria
+﻿namespace EllisWeb.Gematria
 {
+    /// <summary>
+    /// Enumeration of different Gematria types
+    /// </summary>
     public enum GematriaType
     {
         /// <summary>
@@ -21,7 +18,7 @@ namespace EllisWeb.Gematria
         /// </summary>
         AbsoluteNoSofiyot,
         /// <summary>
-        /// Reduced Value (Mispar Katan - מספר קטן). Single digit from the Absolute value
+        /// Reduced Value (Mispar Katan - מספר קטן). Takes the first digit from the number for each character as defined in the Absolute method.
         /// </summary>
         Reduced,
         /// <summary>

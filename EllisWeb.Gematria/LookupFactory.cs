@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EllisWeb.Gematria
 {
-
+    /// <summary>
+    /// Helper class for looking up the numeric values of specific Hebrew letters based on different counting systems
+    /// </summary>
     public static class LookupFactory
     {
         private static readonly Dictionary<GematriaType, Dictionary<char,int>> lookupDict = new Dictionary<GematriaType, Dictionary<char, int>>();
@@ -14,8 +13,8 @@ namespace EllisWeb.Gematria
         /// <summary>
         /// Retrieve a letter lookup dictionary for a given calculation method
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">The <see cref="GematriaType"/> for which to retrieve the lookup dictionary</param>
+        /// <returns>Lookup dictionary giving the numeric value for each Hebew character</returns>
         public static Dictionary<char, int> GetDictionary(GematriaType type)
         {
             // only need to generate each type of dictionary once
@@ -59,7 +58,6 @@ namespace EllisWeb.Gematria
                 dict.Add('ן', 50);
                 dict.Add('ף', 80);
                 dict.Add('ץ', 90);
-
             }
             else // start by calculating the Absolute method. All other methods can be derived from this.
             {
@@ -83,7 +81,9 @@ namespace EllisWeb.Gematria
                         dict.Remove('ץ');
                         break;
                     case GematriaType.Reduced:
-                        dict = new Dictionary<char, int>(GenerateDictionary(GematriaType.AbsoluteAlternate)); // copy contents of alternate dict
+                        // copy contents of alternate dict
+                        dict = new Dictionary<char, int>(GenerateDictionary(GematriaType.AbsoluteAlternate));
+
                         // go through all items and set to mod 10 of existing value
                         var keysToModify = dict.Where(x => x.Value > 9).Select(x => x.Key).ToList();
                         foreach (char itemKey in keysToModify)
@@ -96,7 +96,8 @@ namespace EllisWeb.Gematria
                             else if (val%10 == 0) // tens
                             {
                                 val = val / 10;
-                            } // if is not multiple of 10, then is in range of 1-9, so just use the number
+                            } 
+                            // if is not multiple of 10, then is in range of 1-9, so just use the number
                             dict[itemKey] = val;
                         }
                         break;
