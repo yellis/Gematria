@@ -182,8 +182,8 @@ namespace EllisWeb.Gematria.Tests
         [Test]
         public void ConvertToGematriaNumericString_ThreeDigit_WithSeparators_ReturnsCorrectString()
         {
-            int input = 245;
-            string expected = "רמ\"ה";
+            int input = 613;
+            string expected = "תרי\"ג";
             string output = Calculator.ConvertToGematriaNumericString(input);
             Assert.AreEqual(expected, output);
         }

@@ -7,6 +7,10 @@ A .net class library for calculating the Gematria / Gematriya value of strings o
 
 You can learn more about Gematria in one of these sites ([1](http://en.wikipedia.org/wiki/Gematria), [2](http://www.i18nguy.com/unicode/hebrew-numbers.html))
 
+The library is available for installation [via nuget package](https://www.nuget.org/packages/Gematria/):
+
+    PM> Install-Package Gematria
+
 This library exposes the following methods, all available through the static `Calculator` class:
 
 * `GetGematriaValue`
@@ -19,6 +23,13 @@ This library exposes the following methods, all available through the static `Ca
   * Ignores non-Hebrew characters and punctuation in the given word. 
 * `ConvertToGematriaNumericString`
   * Convert a number into its Gematria Numeric Representation
+
+Sample Usage:
+
+    Calculator.GetNumericGematriaValue("התשעד");           // returns 5774
+    Calculator.GetNumericGematriaValue("ה'תשע"ד");         // returns 5774
+    Calculator.ConvertToGematriaNumericString(613);	       // returns תרי"ג
+    Calculator.ConvertToGematriaNumericString(613, false); // returns תריג
 
 As explained in the links above, there are different systems that can be used for translating Hebrew letters into numeric equivalents. The Gematria library allows use of the following four methods:
 
@@ -36,5 +47,6 @@ As explained in the links above, there are different systems that can be used fo
   * Calculated the value of each letter using the absolute system, truncating all zeros
   * Leads to a sequence of values in order of letters: 1-9, 1-9, 1-9
 
-All code is (c) Ellis Web Development, Ltd (http://ellisweb.net) and is released under the MIT License (http://opensource.org/licenses/MIT)
-For more information, please contact Yaakov Ellis (yaakov@ellisweb.net)
+All code is (c) [Ellis Web Development, Ltd](http://ellisweb.net) and is released under the [MIT License](http://opensource.org/licenses/MIT).
+
+For more information, please contact me at [@yaakov](http://twitter.com/yaakov). Pull Requests and Issues are welcome.
