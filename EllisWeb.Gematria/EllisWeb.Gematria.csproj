@@ -33,7 +33,7 @@
     <DocumentationFile>bin\Release\EllisWeb.Gematria.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>EllisWeb.Gematria.pfx</AssemblyOriginatorKeyFile>
