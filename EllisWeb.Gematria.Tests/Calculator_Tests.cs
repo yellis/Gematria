@@ -72,6 +72,13 @@ namespace EllisWeb.Gematria.Tests
             Assert.AreEqual(expected, output);
         }
 
+        [TestCase("רחצ", 298)]
+        public void GetNumericGematriaValue_StrictMode_IllegalOrderOfDigits_NoErrorWhenOnExceptionsList(string pattern, long expected)
+        {
+            long output = Calculator.GetNumericGematriaValue(pattern);
+            Assert.AreEqual(output, expected);
+        }
+
         [Test]
         public void GetNumericGematriaValue_TwoThousandsGrouping_ReturnsAccurateAnswer()
         {

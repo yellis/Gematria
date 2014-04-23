@@ -36,6 +36,11 @@ namespace EllisWeb.Gematria
             return value;
         }
 
+        private static readonly Dictionary<string, int> KnownNumericValues = new Dictionary<string, int>
+                                                                             {
+                                                                                 {"רחצ", 298}
+                                                                             };
+
         /// <summary>
         /// Calculates the gematria value for a string that is intended to represent a number (example: a year in the Hebrew calendar or page in a Hebrew book).
         /// This function expects that the given string will contain only one word, and will throw an error if more than one word is included 
@@ -53,6 +58,11 @@ namespace EllisWeb.Gematria
         public static long GetNumericGematriaValue(string sourceString, GematriaType gematriaType = GematriaType.Absolute)
         {
             sourceString = sourceString.Trim();
+            if (knownNumericValues.ContainsKey(sourceString))
+            {
+                return knownNumericValues[sourceString];
+            }
+
             if (Regex.IsMatch(sourceString, @"[\s]"))
             {
                 throw new ArgumentException("Source string contains more than one word", "sourceString");
