@@ -49,18 +49,21 @@ namespace EllisWeb.Gematria
         /// </summary>
         /// <param name="sourceString">The string to evaluate</param>
         /// <param name="gematriaType"><see cref="T:EllisWeb.Gematria.GematriaType"/> to use for calculation (defaults to Absolute)</param>
+        /// <param name="isStrictMode">Should the numeric gematria be evaluated with Strict Mode turned on. Defaults to false. When true
+        /// This will throw a <see cref="FormatException"/> whenever the numbers at the end of the string that are under 100 (ק) 
+        /// are not included in descending numeric order, and do not appear on the exceptions list.</param>
         /// <returns>Number equal to the numeric gematria value of the string provided</returns>
         /// <remarks>
         /// This function will infer the division between thousands-groupings of the number by using the following rule:
         /// Evaluate characters one at a time. It is expected that gematria values within a thousands-grouping will always be the same or equal to the previous value.
         /// If a value is encountered that is greater than the previous value, it signifies the start of a new thousands-grouping.
         /// </remarks>
-        public static long GetNumericGematriaValue(string sourceString, GematriaType gematriaType = GematriaType.Absolute)
+        public static long GetNumericGematriaValue(string sourceString, GematriaType gematriaType = GematriaType.Absolute, bool isStrictMode = false)
         {
             sourceString = sourceString.Trim();
-            if (knownNumericValues.ContainsKey(sourceString))
+            if (isStrictMode && KnownNumericValues.ContainsKey(sourceString))
             {
-                return knownNumericValues[sourceString];
+                return KnownNumericValues[sourceString];
             }
 
             if (Regex.IsMatch(sourceString, @"[\s]"))
@@ -96,9 +99,27 @@ namespace EllisWeb.Gematria
             // Go through the number stacks. Multiply the sum of each stack by 1000^X where X is the zero-index value of the current stack
             int currentStackIndex = 0;
             long value = 0;
+            bool inHundreds = false;
+            long maxStackSum = 0;
             foreach (List<int> numberStack in numberStacks)
             {
                 long stackSum = numberStack.Sum();
+                if (isStrictMode)
+                {
+                    numberStack.Reverse(); // need to reverse the current stack, in order to preserve the order of items being evaluated
+                    foreach (var number in numberStack)
+                    {
+                        if (number >= 100)
+                        {
+                            inHundreds = true;
+                        }
+                        if (!inHundreds && number < maxStackSum)
+                        {
+                            throw new FormatException("In Strict Mode, trailing values less than 100 (ק) must appear in the proper order");
+                        }
+                        maxStackSum = Math.Max(maxStackSum, number);
+                    }
+                }
                 var stackMultiplier = Math.Pow(1000, currentStackIndex++);
                 var adjustedStackSum = Convert.ToInt64(stackSum*stackMultiplier);
                 value += adjustedStackSum;

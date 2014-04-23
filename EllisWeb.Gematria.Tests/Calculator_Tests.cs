@@ -72,10 +72,29 @@ namespace EllisWeb.Gematria.Tests
             Assert.AreEqual(expected, output);
         }
 
+        [TestCase("אי", 1010)]
+        [TestCase("יצ", 10090)]
+        [TestCase("תכמ", 420040)]
+        [TestCase("קאי", 101010)]
+        public void GetNumericGematriaValue_IllegalOrderOfDigits_ThrowsFormatExceptionInStrictMode(string pattern, long expectedNonStrict)
+        {
+            bool wasFormatException = false;
+            try
+            {
+                Calculator.GetNumericGematriaValue(pattern, isStrictMode: true);
+            }
+            catch (FormatException)
+            {
+                wasFormatException = true;
+            }
+            Assert.IsTrue(wasFormatException);
+            Assert.AreEqual(expectedNonStrict, Calculator.GetNumericGematriaValue(pattern));
+        }
+
         [TestCase("רחצ", 298)]
         public void GetNumericGematriaValue_StrictMode_IllegalOrderOfDigits_NoErrorWhenOnExceptionsList(string pattern, long expected)
         {
-            long output = Calculator.GetNumericGematriaValue(pattern);
+            long output = Calculator.GetNumericGematriaValue(pattern, isStrictMode:true);
             Assert.AreEqual(output, expected);
         }
 
