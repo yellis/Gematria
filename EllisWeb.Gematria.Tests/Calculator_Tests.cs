@@ -6,6 +6,11 @@ namespace EllisWeb.Gematria.Tests
     [TestFixture]
     public class Calculator_Tests
     {
+        [SetUp]
+        public void Setup()
+        {
+            Calculator.ForceNumericStrictMode = false;
+        }
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -89,6 +94,26 @@ namespace EllisWeb.Gematria.Tests
             }
             Assert.IsTrue(wasFormatException);
             Assert.AreEqual(expectedNonStrict, Calculator.GetNumericGematriaValue(pattern));
+        }
+
+        [TestCase("אי", 1010)]
+        [TestCase("יצ", 10090)]
+        [TestCase("תכמ", 420040)]
+        [TestCase("קאי", 101010)]
+        public void GetNumericGematriaValue_SetForceNumericStrictModeGlobally_StrictModeApplied_OverrideWorks(string pattern, long expectedNonStrict)
+        {
+            Calculator.ForceNumericStrictMode = true;
+            bool wasFormatException = false;
+            try
+            {
+                Calculator.GetNumericGematriaValue(pattern);
+            }
+            catch (FormatException)
+            {
+                wasFormatException = true;
+            }
+            Assert.IsTrue(wasFormatException);
+            Assert.AreEqual(expectedNonStrict, Calculator.GetNumericGematriaValue(pattern, isStrictMode: false));
         }
 
         [TestCase("רחצ", 298)]

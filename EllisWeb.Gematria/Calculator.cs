@@ -11,6 +11,11 @@ namespace EllisWeb.Gematria
     /// </summary>
     public static class Calculator
     {
+        static Calculator()
+        {
+            ForceNumericStrictMode = false; // set the default
+        }
+
         /// <summary>
         /// Calculates the gematria value for all Hebrew letters in the given string.
         /// Ignores all characters that are not Hebrew letters.
@@ -36,6 +41,11 @@ namespace EllisWeb.Gematria
             return value;
         }
 
+        /// <summary>
+        /// Should strict mode always be used when calculating numeric values (defaults to false). When set to true, 
+        /// </summary>
+        public static bool ForceNumericStrictMode { get; set; }
+
         private static readonly Dictionary<string, int> KnownNumericValues = new Dictionary<string, int>
                                                                              {
                                                                                  {"רחצ", 298}
@@ -49,19 +59,23 @@ namespace EllisWeb.Gematria
         /// </summary>
         /// <param name="sourceString">The string to evaluate</param>
         /// <param name="gematriaType"><see cref="T:EllisWeb.Gematria.GematriaType"/> to use for calculation (defaults to Absolute)</param>
-        /// <param name="isStrictMode">Should the numeric gematria be evaluated with Strict Mode turned on. Defaults to false. When true
-        /// This will throw a <see cref="FormatException"/> whenever the numbers at the end of the string that are under 100 (ק) 
-        /// are not included in descending numeric order, and do not appear on the exceptions list.</param>
+        /// <param name="isStrictMode">
+        /// Should the numeric gematria be evaluated with Strict Mode turned on. Defaults to the global setting 
+        /// defined in <see cref="ForceNumericStrictMode"/>. When true this will throw a <see cref="FormatException"/> whenever the numbers at 
+        /// the end of the string that are under 100 (ק) are not included in descending numeric order, and do not appear on the exceptions list.
+        /// </param>
         /// <returns>Number equal to the numeric gematria value of the string provided</returns>
         /// <remarks>
         /// This function will infer the division between thousands-groupings of the number by using the following rule:
         /// Evaluate characters one at a time. It is expected that gematria values within a thousands-grouping will always be the same or equal to the previous value.
         /// If a value is encountered that is greater than the previous value, it signifies the start of a new thousands-grouping.
         /// </remarks>
-        public static long GetNumericGematriaValue(string sourceString, GematriaType gematriaType = GematriaType.Absolute, bool isStrictMode = false)
+        public static long GetNumericGematriaValue(string sourceString, GematriaType gematriaType = GematriaType.Absolute, bool? isStrictMode = null)
         {
             sourceString = sourceString.Trim();
-            if (isStrictMode && KnownNumericValues.ContainsKey(sourceString))
+
+            bool currentStrictMode = isStrictMode ?? ForceNumericStrictMode;
+            if (currentStrictMode && KnownNumericValues.ContainsKey(sourceString))
             {
                 return KnownNumericValues[sourceString];
             }
@@ -104,7 +118,7 @@ namespace EllisWeb.Gematria
             foreach (List<int> numberStack in numberStacks)
             {
                 long stackSum = numberStack.Sum();
-                if (isStrictMode)
+                if (currentStrictMode)
                 {
                     numberStack.Reverse(); // need to reverse the current stack, in order to preserve the order of items being evaluated
                     foreach (var number in numberStack)
