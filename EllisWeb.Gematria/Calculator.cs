@@ -246,5 +246,17 @@ namespace EllisWeb.Gematria
             }
             return str.ToString();
         }
+
+        /// <summary>
+        /// Strip separator characters (single and double-quotes, appostrophes) from a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="stripSpaces"></param>
+        /// <returns></returns>
+        public static string StripSeparatorCharacters(string str, bool stripSpaces = true)
+        {
+            string pattern = stripSpaces ? "[`'\" ]" : "[`'\"]";
+            return Regex.Replace(str, pattern, "");
+        }
     }
 }

@@ -276,5 +276,14 @@ namespace EllisWeb.Gematria.Tests
             Assert.AreEqual(expected, output);
         }
 
+        [TestCase("יחל", "יחל", false)]
+        [TestCase(" יח\"ל", " יחל", false)]
+        [TestCase(" יח\"ל", "יחל", true)]
+        [TestCase("יח`'ל", "יחל", false)]
+        public void StripSeparatorCharacters_DifferentInputs_CharsAreStripped(string input, string expected, bool stripSpaces)
+        {
+            Assert.AreEqual(expected, Calculator.StripSeparatorCharacters(input, stripSpaces));
+        }
+
     }
 }
