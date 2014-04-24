@@ -235,7 +235,8 @@ namespace EllisWeb.Gematria
                 {
                     str.Append("טו");
                     break;
-                } else if (number == 16)
+                } 
+                if (number == 16)
                 {
                     str.Append("טז");
                     break;
