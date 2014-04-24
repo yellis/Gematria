@@ -117,6 +117,7 @@ namespace EllisWeb.Gematria.Tests
         }
 
         [TestCase("רחצ", 298)]
+        [TestCase("ער", 270)]
         public void GetNumericGematriaValue_StrictMode_IllegalOrderOfDigits_NoErrorWhenOnExceptionsList(string pattern, long expected)
         {
             long output = Calculator.GetNumericGematriaValue(pattern, isStrictMode:true);

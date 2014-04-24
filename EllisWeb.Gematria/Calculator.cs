@@ -48,7 +48,8 @@ namespace EllisWeb.Gematria
 
         private static readonly Dictionary<string, int> KnownNumericValues = new Dictionary<string, int>
                                                                              {
-                                                                                 {"רחצ", 298}
+                                                                                 {"רחצ", 298},
+                                                                                 {"ער", 270}
                                                                              };
 
         /// <summary>
