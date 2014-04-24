@@ -124,6 +124,16 @@ namespace EllisWeb.Gematria.Tests
             Assert.AreEqual(output, expected);
         }
 
+        [TestCase("רח\"צ", 298)]
+        [TestCase("ע\"ר", 270)]
+        [TestCase("רח'צ", 298)]
+        [TestCase("ע'ר", 270)]
+        public void GetNumericGematriaValue_StrictMode_IllegalOrderOfDigits_NoErrorWhenOnExceptionsList_StripDividingChars(string pattern, long expected)
+        {
+            long output = Calculator.GetNumericGematriaValue(pattern, isStrictMode: true);
+            Assert.AreEqual(output, expected);
+        }
+
         [Test]
         public void GetNumericGematriaValue_TwoThousandsGrouping_ReturnsAccurateAnswer()
         {

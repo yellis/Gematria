@@ -76,10 +76,14 @@ namespace EllisWeb.Gematria
             sourceString = sourceString.Trim();
 
             bool currentStrictMode = isStrictMode ?? ForceNumericStrictMode;
-            if (currentStrictMode && KnownNumericValues.ContainsKey(sourceString))
+            if (currentStrictMode)
             {
-                return KnownNumericValues[sourceString];
-            }
+                var stripped = StripSeparatorCharacters(sourceString);
+                if (KnownNumericValues.ContainsKey(stripped))
+                {
+                    return KnownNumericValues[stripped];
+                }
+            } 
 
             if (Regex.IsMatch(sourceString, @"[\s]"))
             {
