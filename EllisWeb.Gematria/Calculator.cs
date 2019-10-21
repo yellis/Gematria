@@ -84,7 +84,7 @@ namespace EllisWeb.Gematria
                 {
                     return KnownNumericValues[stripped];
                 }
-            } 
+            }
 
             if (Regex.IsMatch(sourceString, @"[\s]"))
             {
@@ -141,7 +141,7 @@ namespace EllisWeb.Gematria
                     }
                 }
                 var stackMultiplier = Math.Pow(1000, currentStackIndex++);
-                var adjustedStackSum = Convert.ToInt64(stackSum*stackMultiplier);
+                var adjustedStackSum = Convert.ToInt64(stackSum * stackMultiplier);
                 value += adjustedStackSum;
             }
 
@@ -172,7 +172,8 @@ namespace EllisWeb.Gematria
             if (number == 0)
             {
                 return string.Empty;
-            } else if (number < 0)
+            }
+            else if (number < 0)
             {
                 throw new ArgumentException("Number is less than zero", "number");
             }
@@ -205,21 +206,28 @@ namespace EllisWeb.Gematria
             }
 
             // If needed, add in final quotation separator between tens and singles letter
-            if (includeSeparators && originalNumber >= 10)
+            if (includeSeparators)
             {
-                if (str.Length == 1)
+                if (originalNumber < 10)
                 {
-                    // for specific cases (single char when separator is required), we use the thousands separator - AFTER the character...
+                    // for single character we use the thousands separator - AFTER the character...
                     str.Append(thousandsSeparator);
                 }
-                else if (str.Length > 1)
+                else if (originalNumber >= 10)
                 {
-                    // add in a quotation separator between the second-to-last and last characters
-                    str.Insert(str.Length - 1, tensSeparator);
+                    if (str.Length == 1)
+                    {
+                        // for specific cases (single char when separator is required), we use the thousands separator - AFTER the character...
+                        str.Append(thousandsSeparator);
+                    }
+                    else if (str.Length > 1)
+                    {
+                        // add in a quotation separator between the second-to-last and last characters
+                        str.Insert(str.Length - 1, tensSeparator);
+                    }
                 }
-              
             }
-            
+
             return str.ToString();
         }
 
@@ -240,7 +248,7 @@ namespace EllisWeb.Gematria
             var valueList = dict.Select(x => x.Value).ToList(); // get list of all available values
             valueList.Sort();
             valueList.Reverse(); // get value list in reverse order - highest number first. Speeds up evaluations.
-            
+
             StringBuilder str = new StringBuilder();
             while (number > 0)
             {
@@ -249,7 +257,7 @@ namespace EllisWeb.Gematria
                 {
                     str.Append("טו");
                     break;
-                } 
+                }
                 if (number == 16)
                 {
                     str.Append("טז");

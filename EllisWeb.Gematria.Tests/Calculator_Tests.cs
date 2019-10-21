@@ -197,6 +197,16 @@ namespace EllisWeb.Gematria.Tests
             Assert.AreEqual(expected, output);
         }
 
+        [TestCase(1, @"א'")]
+        [TestCase(3, @"ג'")]
+        [TestCase(6, @"ו'")]
+        [TestCase(9, @"ט'")]
+        public void ConvertToGematriaNumericString_SingleDigit_WithSeparators_ReturnsCorrectString(int input, string expected)
+        {
+            string output = Calculator.ConvertToGematriaNumericString(input);
+            Assert.AreEqual(expected, output);
+        }
+
         [TestCase(10, @"י'")]
         [TestCase(11, @"י""א")]
         [TestCase(12, @"י""ב")]
