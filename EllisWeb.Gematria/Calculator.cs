@@ -184,8 +184,8 @@ namespace EllisWeb.Gematria
             {
                 int currentGrouping = Convert.ToInt32(number % 1000);
                 numberGroupings.Add(currentGrouping);
-                number = number - currentGrouping;
-                number = number / 1000;
+                number -= currentGrouping;
+                number /= 1000;
             }
 
             // Number groupings now have the smallest groupings (0-999) first, and the largest groupings last. 
@@ -207,8 +207,17 @@ namespace EllisWeb.Gematria
             // If needed, add in final quotation separator between tens and singles letter
             if (includeSeparators && originalNumber >= 10)
             {
-                // add in a quotation separator between the second-to-last and last characters
-                str.Insert(str.Length - 1, tensSeparator);
+                if (str.Length == 1)
+                {
+                    // for specific cases (single char when separator is required), we use the thousands separator - AFTER the character...
+                    str.Append(thousandsSeparator);
+                }
+                else if (str.Length > 1)
+                {
+                    // add in a quotation separator between the second-to-last and last characters
+                    str.Insert(str.Length - 1, tensSeparator);
+                }
+              
             }
             
             return str.ToString();

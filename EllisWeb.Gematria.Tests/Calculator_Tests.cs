@@ -178,29 +178,32 @@ namespace EllisWeb.Gematria.Tests
             Calculator.ConvertToGematriaNumericString(input);
         }
 
-        [Test]
-        public void ConvertToGematriaNumericString_SingleDigit_NoSeparators_ReturnsCorrectString()
+        [TestCase(5,"ה")]
+        [TestCase(9,"ט")]
+
+        public void ConvertToGematriaNumericString_SingleDigit_NoSeparators_ReturnsCorrectString(int input, string expected)
         {
-            int input = 5;
-            string expected = "ה";
             string output = Calculator.ConvertToGematriaNumericString(input, false);
             Assert.AreEqual(expected, output);
         }
 
-        [Test]
-        public void ConvertToGematriaNumericString_TwoDigit_NoSeparators_ReturnsCorrectString()
+        [TestCase(10, "י")]
+        [TestCase(12, "יב")]
+        [TestCase(20, "כ")]
+        [TestCase(30, "ל")]
+        public void ConvertToGematriaNumericString_TwoDigit_NoSeparators_ReturnsCorrectString(int input, string expected)
         {
-            int input = 12;
-            string expected = "יב";
             string output = Calculator.ConvertToGematriaNumericString(input, false);
             Assert.AreEqual(expected, output);
         }
 
-        [Test]
-        public void ConvertToGematriaNumericString_TwoDigit_WithSeparators_ReturnsCorrectString()
+        [TestCase(10, @"י'")]
+        [TestCase(11, @"י""א")]
+        [TestCase(12, @"י""ב")]
+        [TestCase(20, @"כ'")]
+        [TestCase(30, @"ל'")]
+        public void ConvertToGematriaNumericString_TwoDigit_WithSeparators_ReturnsCorrectString(int input, string expected)
         {
-            int input = 12;
-            string expected = "י\"ב";
             string output = Calculator.ConvertToGematriaNumericString(input);
             Assert.AreEqual(expected, output);
         }
