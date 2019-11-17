@@ -152,9 +152,7 @@ namespace EllisWeb.Gematria
         /// Convert a number into its Gematria Numeric representation
         /// </summary>
         /// <param name="number">The non-negative number to evaluate</param>
-        /// <param name="includeSeparators">Should separators between thousands-groupings be included in the string that is returned</param>
-        /// <param name="thousandsSeparator">Value to use separating between thousands-groupings. Defaults to a single quote (')</param>
-        /// <param name="tensSeparator">Value to use separating between the tens and single digit letters. Defaults to a double quote (")</param>
+        /// <param name="options">Gematria conversion options</param>
         /// <example>
         /// 8 ==> ח
         /// 15 ==> ט"ו
@@ -167,20 +165,26 @@ namespace EllisWeb.Gematria
         /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
         /// </remarks>
         /// <returns>Gemtria Numeric representation of given number</returns>
-        public static string ConvertToGematriaNumericString(long number, bool includeSeparators = true, char thousandsSeparator = '\'', char tensSeparator = '"')
+        public static string ConvertToGematriaNumericString(long number, GematriaOptions options)
         {
             if (number == 0)
             {
                 return string.Empty;
             }
-            else if (number < 0)
+
+            if (number < 0)
             {
-                throw new ArgumentException("Number is less than zero", "number");
+                throw new ArgumentException("Number is less than zero", nameof(number));
+            }
+
+            if (options== null)
+            {
+                throw new ArgumentException("Invalid options sent", nameof(options));
             }
             var originalNumber = number;
 
             // Separate number into groupings of thousands, each one to be evaluated separately
-            List<int> numberGroupings = new List<int>();
+            var numberGroupings = new List<int>();
             while (number > 0)
             {
                 int currentGrouping = Convert.ToInt32(number % 1000);
@@ -194,36 +198,52 @@ namespace EllisWeb.Gematria
             numberGroupings.Reverse();
 
             // Evaluate each grouping, appending its Gematria representation to the string. Add in separators if needed
-            StringBuilder str = new StringBuilder();
+            var str = new StringBuilder();
             foreach (int numberGrouping in numberGroupings)
             {
-                if (includeSeparators && str.Length > 0)
+                if (str.Length > 0 && options.IncludeSeparators)
                 {
-                    str.Append(thousandsSeparator);
+                    str.Append(options.ThousandsSeparator);
                 }
-                string groupingStr = GetNumericString(numberGrouping);
+                var groupingStr = GetNumericString(numberGrouping);
                 str.Append(groupingStr);
             }
 
             // If needed, add in final quotation separator between tens and singles letter
-            if (includeSeparators)
+            if (options.IncludeSeparators)
             {
+                // single char
                 if (originalNumber < 10)
                 {
-                    // for single character we use the thousands separator - AFTER the character...
-                    str.Append(thousandsSeparator);
+                    // for single character we use the relevant separator - AFTER the character...
+                    if (options.AddQuoteAfterSingleChar)
+                    {
+                        str.Append(options.ThousandsSeparator);
+                    }
+                    else
+                    {
+                        str.Append(options.TensSeparator);
+                    }
                 }
-                else if (originalNumber >= 10)
+                // not a single char
+                else if (originalNumber >= 10 )
                 {
                     if (str.Length == 1)
                     {
-                        // for specific cases (single char when separator is required), we use the thousands separator - AFTER the character...
-                        str.Append(thousandsSeparator);
+                        // for specific cases (single char when separator is required), we use the relevant separator - AFTER the character...
+                        if (options.AddQuoteAfterSingleChar)
+                        {
+                            str.Append(options.ThousandsSeparator);
+                        }
+                        else
+                        {
+                            str.Append(options.TensSeparator);
+                        }
                     }
                     else if (str.Length > 1)
                     {
                         // add in a quotation separator between the second-to-last and last characters
-                        str.Insert(str.Length - 1, tensSeparator);
+                        str.Insert(str.Length - 1, options.TensSeparator);
                     }
                 }
             }
@@ -243,6 +263,7 @@ namespace EllisWeb.Gematria
                 throw new ArgumentException("Number not between 1 and 999");
             }
             var dict = LookupFactory.GetDictionary(GematriaType.AbsoluteNoSofiyot);
+
             // Remove sofiyot letters to avoid dictionary collissions. These are never used in numeric strings
             var reverseDict = dict.ToDictionary(k => k.Value, v => v.Key); // create a dict looking up letter by value
             var valueList = dict.Select(x => x.Value).ToList(); // get list of all available values
