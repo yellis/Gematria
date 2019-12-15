@@ -152,6 +152,30 @@ namespace EllisWeb.Gematria
         /// Convert a number into its Gematria Numeric representation
         /// </summary>
         /// <param name="number">The non-negative number to evaluate</param>
+        /// <param name="includeSeparators">Should separators between thousands-groupings be included in the string that is returned</param>
+        /// <param name="thousandsSeparator">Value to use separating between thousands-groupings. Defaults to a single quote (')</param>
+        /// <param name="tensSeparator">Value to use separating between the tens and single digit letters. Defaults to a double quote (")</param>
+        /// <example>
+        /// 8 ==> ח
+        /// 15 ==> ט"ו
+        /// 245 ==> רמ"ה
+        /// 5,767 ==> ה'תשס"ז
+        /// 1,024,999 ==> א'כד'תתרצ"ט
+        /// </example>
+        /// <remarks>
+        /// Will evaluate each thousands-grouping separately, inserting separators if needed.
+        /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
+        /// </remarks>
+        /// <returns>Gemtria Numeric representation of given number</returns>
+        public static string ConvertToGematriaNumericString(long number, bool includeSeparators = true, char thousandsSeparator = '\'', char tensSeparator = '"')
+        {
+            return ConvertToGematriaNumericString(number, new GematriaOptions(includeSeparators, thousandsSeparator, tensSeparator));
+        }
+
+        /// <summary>
+        /// Convert a number into its Gematria Numeric representation
+        /// </summary>
+        /// <param name="number">The non-negative number to evaluate</param>
         /// <param name="options">Gematria conversion options</param>
         /// <example>
         /// 8 ==> ח
