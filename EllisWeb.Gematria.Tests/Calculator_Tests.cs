@@ -183,7 +183,7 @@ namespace EllisWeb.Gematria.Tests
 
         public void ConvertToGematriaNumericString_SingleDigit_NoSeparators_ReturnsCorrectString(int input, string expected)
         {
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() {IncludeSeparators = false});
             Assert.AreEqual(expected, output);
         }
 
@@ -194,7 +194,7 @@ namespace EllisWeb.Gematria.Tests
         [TestCase(100, "ק")]
         public void ConvertToGematriaNumericString_TwoDigit_NoSeparators_ReturnsCorrectString(int input, string expected)
         {
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false });
             Assert.AreEqual(expected, output);
         }
 
@@ -206,7 +206,7 @@ namespace EllisWeb.Gematria.Tests
         [TestCase(100, @"ק""")]
         public void ConvertToGematriaNumericString_AnyDigitAmount_WithSeparators_WithDoubleQoute_ReturnsCorrectString(int input, string expected)
         {
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(addQuoteAfterSingleChar:false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { AddQuoteAfterSingleChar = false});
             Assert.AreEqual(expected, output);
         }
 
@@ -236,7 +236,7 @@ namespace EllisWeb.Gematria.Tests
         {
             int input = 15;
             string expected = "טו";
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false });
             Assert.AreEqual(expected, output);
         }
 
@@ -254,7 +254,7 @@ namespace EllisWeb.Gematria.Tests
         {
             int input = 16;
             string expected = "טז";
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false)); 
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false }); 
             Assert.AreEqual(expected, output);
         }
 
@@ -263,7 +263,7 @@ namespace EllisWeb.Gematria.Tests
         {
             int input = 245;
             string expected = "רמה";
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false });
             Assert.AreEqual(expected, output);
         }
 
@@ -281,7 +281,7 @@ namespace EllisWeb.Gematria.Tests
         {
             int input = 5767;
             string expected = "התשסז";
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false });
             Assert.AreEqual(expected, output);
         }
 
@@ -299,7 +299,7 @@ namespace EllisWeb.Gematria.Tests
         {
             int input = 1024999;
             string expected = "אכדתתקצט";
-            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions(false));
+            string output = Calculator.ConvertToGematriaNumericString(input, new GematriaOptions() { IncludeSeparators = false });
             Assert.AreEqual(expected, output);
         }
 

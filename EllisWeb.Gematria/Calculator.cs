@@ -150,6 +150,7 @@ namespace EllisWeb.Gematria
 
         /// <summary>
         /// Convert a number into its Gematria Numeric representation
+        /// this method is only a wrapper for the other overload which utilizes <see cref="GematriaOptions"/> class.
         /// </summary>
         /// <param name="number">The non-negative number to evaluate</param>
         /// <param name="includeSeparators">Should separators between thousands-groupings be included in the string that is returned</param>
@@ -167,9 +168,14 @@ namespace EllisWeb.Gematria
         /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
         /// </remarks>
         /// <returns>Gemtria Numeric representation of given number</returns>
+        [Obsolete("Please use the other overload - ConvertToGematriaNumericString with GematriaOptions")]
         public static string ConvertToGematriaNumericString(long number, bool includeSeparators = true, char thousandsSeparator = '\'', char tensSeparator = '"')
         {
-            return ConvertToGematriaNumericString(number, new GematriaOptions(includeSeparators, thousandsSeparator, tensSeparator));
+            return ConvertToGematriaNumericString(number, new GematriaOptions(){ 
+                IncludeSeparators = includeSeparators,
+                ThousandsSeparator = thousandsSeparator,
+                TensSeparator = tensSeparator
+            });
         }
 
         /// <summary>
