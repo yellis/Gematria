@@ -195,7 +195,7 @@ namespace EllisWeb.Gematria
         /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
         /// </remarks>
         /// <returns>Gemtria Numeric representation of given number</returns>
-        public static string ConvertToGematriaNumericString(long number, GematriaOptions options)
+        public static string ConvertToGematriaNumericString(long number, GematriaOptions options = null)
         {
             if (number == 0)
             {
@@ -207,10 +207,7 @@ namespace EllisWeb.Gematria
                 throw new ArgumentException("Number is less than zero", nameof(number));
             }
 
-            if (options== null)
-            {
-                throw new ArgumentException("Invalid options sent", nameof(options));
-            }
+            options = options ?? new GematriaOptions();
             var originalNumber = number;
 
             // Separate number into groupings of thousands, each one to be evaluated separately
