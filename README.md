@@ -29,7 +29,7 @@ Sample Usage:
     Calculator.GetNumericGematriaValue("התשעד");           // returns 5774
     Calculator.GetNumericGematriaValue("ה'תשע"ד");         // returns 5774
     Calculator.ConvertToGematriaNumericString(613);	       // returns תרי"ג
-    Calculator.ConvertToGematriaNumericString(613, false); // returns תריג
+    Calculator.ConvertToGematriaNumericString(613, new GematriaOptions{ IncludeSeparators = false }); // returns תריג
 
 As explained in the links above, there are different systems that can be used for translating Hebrew letters into numeric equivalents. The Gematria library allows use of the following four methods:
 
@@ -47,6 +47,6 @@ As explained in the links above, there are different systems that can be used fo
   * Calculated the value of each letter using the absolute system, truncating all zeros
   * Leads to a sequence of values in order of letters: 1-9, 1-9, 1-9
 
-All code is (c) [Ellis Web Development, Ltd](http://ellisweb.net) and is released under the [MIT License](http://opensource.org/licenses/MIT).
+All code is (c) Yaakov Ellis and is released under the [MIT License](http://opensource.org/licenses/MIT).
 
-For more information, please contact me at [@yaakov](http://twitter.com/yaakov). Pull Requests and Issues are welcome.
+For more information, please contact me at [@yaakov](http://twitter.com/yaakov) or my username @ gmail. Pull Requests and Issues are welcome.
