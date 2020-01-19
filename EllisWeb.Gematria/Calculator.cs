@@ -84,7 +84,7 @@ namespace EllisWeb.Gematria
                 {
                     return KnownNumericValues[stripped];
                 }
-            } 
+            }
 
             if (Regex.IsMatch(sourceString, @"[\s]"))
             {
@@ -141,7 +141,7 @@ namespace EllisWeb.Gematria
                     }
                 }
                 var stackMultiplier = Math.Pow(1000, currentStackIndex++);
-                var adjustedStackSum = Convert.ToInt64(stackSum*stackMultiplier);
+                var adjustedStackSum = Convert.ToInt64(stackSum * stackMultiplier);
                 value += adjustedStackSum;
             }
 
@@ -150,6 +150,7 @@ namespace EllisWeb.Gematria
 
         /// <summary>
         /// Convert a number into its Gematria Numeric representation
+        /// this method is only a wrapper for the other overload which utilizes <see cref="GematriaOptions"/> class.
         /// </summary>
         /// <param name="number">The non-negative number to evaluate</param>
         /// <param name="includeSeparators">Should separators between thousands-groupings be included in the string that is returned</param>
@@ -167,25 +168,56 @@ namespace EllisWeb.Gematria
         /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
         /// </remarks>
         /// <returns>Gemtria Numeric representation of given number</returns>
+        [Obsolete("Please use the other overload - ConvertToGematriaNumericString with GematriaOptions")]
         public static string ConvertToGematriaNumericString(long number, bool includeSeparators = true, char thousandsSeparator = '\'', char tensSeparator = '"')
+        {
+            return ConvertToGematriaNumericString(number, new GematriaOptions(){ 
+                IncludeSeparators = includeSeparators,
+                ThousandsSeparator = thousandsSeparator,
+                TensSeparator = tensSeparator
+            });
+        }
+
+        /// <summary>
+        /// Convert a number into its Gematria Numeric representation
+        /// </summary>
+        /// <param name="number">The non-negative number to evaluate</param>
+        /// <param name="options">Gematria conversion options</param>
+        /// <example>
+        /// 8 ==> ח
+        /// 15 ==> ט"ו
+        /// 245 ==> רמ"ה
+        /// 5,767 ==> ה'תשס"ז
+        /// 1,024,999 ==> א'כד'תתרצ"ט
+        /// </example>
+        /// <remarks>
+        /// Will evaluate each thousands-grouping separately, inserting separators if needed.
+        /// A value of 15 will always be represented as ט"ו and 16 will be represented as ט"ז, following Jewish custom. 
+        /// </remarks>
+        /// <returns>Gemtria Numeric representation of given number</returns>
+        public static string ConvertToGematriaNumericString(long number, GematriaOptions options = null)
         {
             if (number == 0)
             {
                 return string.Empty;
-            } else if (number < 0)
-            {
-                throw new ArgumentException("Number is less than zero", "number");
             }
+
+            if (number < 0)
+            {
+                throw new ArgumentException("Number is less than zero", nameof(number));
+            }
+
+            options = options ?? new GematriaOptions();
             var originalNumber = number;
 
             // Separate number into groupings of thousands, each one to be evaluated separately
-            List<int> numberGroupings = new List<int>();
+            var numberGroupings = new List<int>();
             while (number > 0)
             {
                 int currentGrouping = Convert.ToInt32(number % 1000);
                 numberGroupings.Add(currentGrouping);
-                number = number - currentGrouping;
-                number = number / 1000;
+                number -= currentGrouping;
+                number /= 1000;
             }
 
             // Number groupings now have the smallest groupings (0-999) first, and the largest groupings last. 
@@ -193,24 +225,56 @@ namespace EllisWeb.Gematria
             numberGroupings.Reverse();
 
             // Evaluate each grouping, appending its Gematria representation to the string. Add in separators if needed
-            StringBuilder str = new StringBuilder();
+            var str = new StringBuilder();
             foreach (int numberGrouping in numberGroupings)
             {
-                if (includeSeparators && str.Length > 0)
+                if (str.Length > 0 && options.IncludeSeparators)
                 {
-                    str.Append(thousandsSeparator);
+                    str.Append(options.ThousandsSeparator);
                 }
-                string groupingStr = GetNumericString(numberGrouping);
+                var groupingStr = GetNumericString(numberGrouping);
                 str.Append(groupingStr);
             }
 
             // If needed, add in final quotation separator between tens and singles letter
-            if (includeSeparators && originalNumber >= 10)
+            if (options.IncludeSeparators)
             {
-                // add in a quotation separator between the second-to-last and last characters
-                str.Insert(str.Length - 1, tensSeparator);
+                // single char
+                if (originalNumber < 10)
+                {
+                    // for single character we use the relevant separator - AFTER the character...
+                    if (options.AddQuoteAfterSingleChar)
+                    {
+                        str.Append(options.ThousandsSeparator);
+                    }
+                    else
+                    {
+                        str.Append(options.TensSeparator);
+                    }
+                }
+                // not a single char
+                else if (originalNumber >= 10 )
+                {
+                    if (str.Length == 1)
+                    {
+                        // for specific cases (single char when separator is required), we use the relevant separator - AFTER the character...
+                        if (options.AddQuoteAfterSingleChar)
+                        {
+                            str.Append(options.ThousandsSeparator);
+                        }
+                        else
+                        {
+                            str.Append(options.TensSeparator);
+                        }
+                    }
+                    else if (str.Length > 1)
+                    {
+                        // add in a quotation separator between the second-to-last and last characters
+                        str.Insert(str.Length - 1, options.TensSeparator);
+                    }
+                }
             }
-            
+
             return str.ToString();
         }
 
@@ -226,12 +290,13 @@ namespace EllisWeb.Gematria
                 throw new ArgumentException("Number not between 1 and 999");
             }
             var dict = LookupFactory.GetDictionary(GematriaType.AbsoluteNoSofiyot);
+
             // Remove sofiyot letters to avoid dictionary collissions. These are never used in numeric strings
             var reverseDict = dict.ToDictionary(k => k.Value, v => v.Key); // create a dict looking up letter by value
             var valueList = dict.Select(x => x.Value).ToList(); // get list of all available values
             valueList.Sort();
             valueList.Reverse(); // get value list in reverse order - highest number first. Speeds up evaluations.
-            
+
             StringBuilder str = new StringBuilder();
             while (number > 0)
             {
@@ -240,7 +305,7 @@ namespace EllisWeb.Gematria
                 {
                     str.Append("טו");
                     break;
-                } 
+                }
                 if (number == 16)
                 {
                     str.Append("טז");

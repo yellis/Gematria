@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculator.cs" />
+    <Compile Include="GematriaOptions.cs" />
     <Compile Include="GematriaType.cs" />
     <Compile Include="LookupFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
