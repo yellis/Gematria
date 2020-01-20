@@ -7,7 +7,7 @@
     <owners>Yaakov Ellis</owners>
     <description>A .net class library for calculating the Gematria value of strings of Hebrew text, or convert numbers into Hebrew Text.</description>
     <projectUrl>https://github.com/yellis/Gematria</projectUrl>
-    <licenseUrl>https://github.com/yellis/Gematria/blob/master/License.txt</licenseUrl>
+    <license type="expression">MIT</license>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>gematria gematriya hebrew numbers aleph-bet</tags>
     <language>en-US</language>
